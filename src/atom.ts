@@ -24,9 +24,9 @@ export const nowUser = atom<IUser>({
 export const getSelectUser = selectorFamily({
   key: 'selectOne',
   get: (id: number) => async () => {
-    const user = fetch(`https://jsonplaceholder.typicode.com/users/${id}`).then(
-      res => res.json(),
-    );
+    const user = fetch(`https://jsonplaceholder.typicode.com/users/${id}`)
+      .then(res => res.json())
+      .catch(err => console.log('An error occurred', err));
     return user;
   },
 });
@@ -35,9 +35,11 @@ export const getUserSelector = selector({
   key: 'getUserSelector',
   get: async ({get}) => {
     const id = get(selectId);
-    const user = await fetch(
-      `https://jsonplaceholder.typicode.com/users/${id}`,
-    ).then(res => res.json());
+    const user = await fetch(`https://jsonplaceholder.typicode.com/users/${id}`)
+      .then(res => res.json())
+      .catch(() => {
+        return {};
+      });
     return user;
   },
   set: ({set}, newValue) => {

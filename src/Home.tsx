@@ -13,8 +13,8 @@ import {IUser} from './interface';
 
 const HomeScreen = () => {
   const {data, isLoading} = useQuery<IUser[]>(['userList'], getUserList);
-  const userLoadable = useRecoilValueLoadable(getUserSelector);
-  console.log(userLoadable);
+  // const userLoadable = useRecoilValueLoadable(getUserSelector);
+
   const [id, setId] = useRecoilState(selectId);
   // const userId = useRecoilValue(selectId);
   // const setUserId = useSetRecoilState(selectId);
@@ -29,8 +29,9 @@ const HomeScreen = () => {
   //   })();
   // }, []);
 
-  const user = useRecoilValue<IUser>(getSelectUser(id));
-  // const [user, setUser] = useRecoilState(selectingUser);
+  // const user = useRecoilValue<IUser>(getSelectUser(id));
+  const [user, setUser] = useRecoilState(getUserSelector);
+  // console.log('-------------------------------------', user);
   return (
     <ScrollView style={{flex: 1}}>
       <Text style={{fontSize: 20, marginVertical: 16}}>List</Text>
