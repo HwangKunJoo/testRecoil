@@ -16,13 +16,6 @@ export const currentUserState = atom<IUser>({
   default: undefined,
 });
 
-export const currentUserSelector = selector({
-  key: 'currentUserSeletor',
-  get: ({get}) => {
-    const id = get(selectId);
-  },
-});
-
 // export const userListState = selector({
 //   key: 'userListState',
 //   get: async ({get}) => {
@@ -30,6 +23,11 @@ export const currentUserSelector = selector({
 //     return response;
 //   },
 // });
+
+export const nowUser = atom<IUser>({
+  key: 'nowUser',
+  default: undefined,
+});
 
 export const getSelectUser = selectorFamily({
   key: 'selectOne',
@@ -41,8 +39,8 @@ export const getSelectUser = selectorFamily({
   },
 });
 
-export const getUserSelector = selector({
-  key: 'getUserSelector',
+export const selectingUser = selector({
+  key: 'selectingUser',
   get: async ({get}) => {
     const id = get(selectId);
     const user = await fetch(

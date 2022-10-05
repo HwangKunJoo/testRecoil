@@ -8,12 +8,12 @@ import {
   useSetRecoilState,
 } from 'recoil';
 import {getUserList} from './api';
-import {getSelectUser, getUserSelector, selectId} from './atom';
+import {getSelectUser, selectId, selectingUser} from './atom';
 import {IUser} from './interface';
 
 const HomeScreen = () => {
   const {data, isLoading} = useQuery<IUser[]>(['userList'], getUserList);
-  // const userLoadable = useRecoilValueLoadable(getUserSelector);
+  const userLoadable = useRecoilValueLoadable(selectingUser);
 
   const [id, setId] = useRecoilState(selectId);
   // const userId = useRecoilValue(selectId);
@@ -30,95 +30,96 @@ const HomeScreen = () => {
   // }, []);
 
   // const user = useRecoilValue<IUser>(getSelectUser(id));
-  // const user = useRecoilValue(getUserSelector);
+  // const user = useRecoilValue(selectingUser);
+  console.log('------------------------------------', userLoadable);
 
-  return (
-    <ScrollView style={{flex: 1}}>
-      <Text style={{fontSize: 20, marginVertical: 16}}>List</Text>
-      {data?.map(user => (
-        <View style={{marginBottom: 8}} key={user.id}>
-          <Text>id: {user.id}</Text>
-          <Text>name: {user.name}</Text>
-        </View>
-      ))}
-      <Text style={{fontSize: 24, marginTop: 20}}>Select User</Text>
-      <View style={{flexWrap: 'wrap', flexDirection: 'row'}}>
-        {data?.map(user => (
-          <TouchableOpacity
-            key={user.id}
-            style={{
-              width: 30,
-              height: 30,
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderWidth: 1,
-              borderColor: 'black',
-            }}
-            onPress={() => setId(user.id)}>
-            <Text>{user.id}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-      {/* {user && (
+  switch (userLoadable.state) {
+    case 'hasValue':
+      return (
+        <ScrollView style={{flex: 1}}>
+          <Text style={{fontSize: 20, marginVertical: 16}}>List</Text>
+          {data?.map(user => (
+            <View style={{marginBottom: 8}} key={user.id}>
+              <Text>id: {user.id}</Text>
+              <Text>name: {user.name}</Text>
+            </View>
+          ))}
+          <Text style={{fontSize: 24, marginTop: 20}}>Select User</Text>
+          <View style={{flexWrap: 'wrap', flexDirection: 'row'}}>
+            {data?.map(user => (
+              <TouchableOpacity
+                key={user.id}
+                style={{
+                  width: 30,
+                  height: 30,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  borderWidth: 1,
+                  borderColor: 'black',
+                }}
+                onPress={() => setId(user.id)}>
+                <Text>{user.id}</Text>
+              </TouchableOpacity>
+            ))}
+          </View>
+          {userLoadable.contents && (
+            <View>
+              <Text>id: {userLoadable.contents.id}</Text>
+              <Text>name: {userLoadable.contents.name}</Text>
+            </View>
+          )}
+        </ScrollView>
+      );
+
+    case 'loading':
+      return (
         <View>
-          <Text>id: {user.id}</Text>
-          <Text>name: {user.name}</Text>
+          <Text>loading....</Text>
         </View>
-      )} */}
-    </ScrollView>
-  );
+      );
+    case 'hasError':
+      return (
+        <View>
+          <Text>has error</Text>
+        </View>
+      );
+  }
+  // return (
+  //   <ScrollView style={{flex: 1}}>
+
+  //     <Text style={{fontSize: 20, marginVertical: 16}}>List</Text>
+  //     {data?.map(user => (
+  //       <View style={{marginBottom: 8}} key={user.id}>
+  //         <Text>id: {user.id}</Text>
+  //         <Text>name: {user.name}</Text>
+  //       </View>
+  //     ))}
+  //     <Text style={{fontSize: 24, marginTop: 20}}>Select User</Text>
+  //     <View style={{flexWrap: 'wrap', flexDirection: 'row'}}>
+  //       {data?.map(user => (
+  //         <TouchableOpacity
+  //           key={user.id}
+  //           style={{
+  //             width: 30,
+  //             height: 30,
+  //             alignItems: 'center',
+  //             justifyContent: 'center',
+  //             borderWidth: 1,
+  //             borderColor: 'black',
+  //           }}
+  //           onPress={() => setId(user.id)}>
+  //           <Text>{user.id}</Text>
+  //         </TouchableOpacity>
+  //       ))}
+  //     </View>
+  //     {/* {user && (
+  //       <View>
+  //         <Text>id: {user.id}</Text>
+  //         <Text>name: {user.name}</Text>
+  //       </View>
+  //     )} */}
+  //   </ScrollView>
+  // );
 };
 
 export default HomeScreen;
-
-//  switch (userLoadable.state) {
-//    case 'hasValue':
-//      return (
-//        <ScrollView style={{flex: 1}}>
-//          <Text style={{fontSize: 20, marginVertical: 16}}>List</Text>
-//          {data?.map(user => (
-//            <View style={{marginBottom: 8}} key={user.id}>
-//              <Text>id: {user.id}</Text>
-//              <Text>name: {user.name}</Text>
-//            </View>
-//          ))}
-//          <Text style={{fontSize: 24, marginTop: 20}}>Select User</Text>
-//          <View style={{flexWrap: 'wrap', flexDirection: 'row'}}>
-//            {data?.map(user => (
-//              <TouchableOpacity
-//                key={user.id}
-//                style={{
-//                  width: 30,
-//                  height: 30,
-//                  alignItems: 'center',
-//                  justifyContent: 'center',
-//                  borderWidth: 1,
-//                  borderColor: 'black',
-//                }}
-//                onPress={() => setId(user.id)}>
-//                <Text>{user.id}</Text>
-//              </TouchableOpacity>
-//            ))}
-//          </View>
-//          {user && (
-//            <View>
-//              <Text>id: {user.id}</Text>
-//              <Text>name: {user.name}</Text>
-//            </View>
-//          )}
-//        </ScrollView>
-//      );
-
-//    case 'loading':
-//      return (
-//        <View>
-//          <Text>loading....</Text>
-//        </View>
-//      );
-//    case 'hasError':
-//      return (
-//        <View>
-//          <Text>has error</Text>
-//        </View>
-//      );
-//  }
