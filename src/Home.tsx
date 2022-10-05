@@ -8,7 +8,7 @@ import {
   useSetRecoilState,
 } from 'recoil';
 import {getUserList} from './api';
-import {getSelectUser, getUserSelector, selectId, selectUser} from './atom';
+import {getSelectUser, getUserSelector, selectId} from './atom';
 import {IUser} from './interface';
 
 const HomeScreen = () => {
@@ -30,8 +30,8 @@ const HomeScreen = () => {
   // }, []);
 
   // const user = useRecoilValue<IUser>(getSelectUser(id));
-  const [user, setUser] = useRecoilState(getUserSelector);
-  // console.log('-------------------------------------', user);
+  // const user = useRecoilValue(getUserSelector);
+
   return (
     <ScrollView style={{flex: 1}}>
       <Text style={{fontSize: 20, marginVertical: 16}}>List</Text>
